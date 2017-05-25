@@ -17,6 +17,7 @@ I choose Vue.js as front end to handle the UI and user input. I don't know much 
 1. make the REST API. It is simple enough although it is my first attempt. I hope it is a right start.
 2. test the API with curl. so far so good.
 3. make UI with VueJS:
+
     a. learn VueJS - read the [document](https://vuejs.org/v2/guide/ "vuejs guide")
     b. try it out - [this](https://github.com/lh00000000/vue-flask-template "vue-flask-template") and [this](https://github.com/JulienBalestra/vue-flask "vue-flask") might help
     c. Encounter problem, read the [document](https://vuejs.org/v2/guide/ "vuejs guide") again, and document it
