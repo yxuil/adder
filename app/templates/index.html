@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Adder</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='skeleton.css') }}">
+</head>
+
+<body>
+    <div id="app" class="container">
+        <div>
+            {% raw %}
+            <input class="four columns" v-model="numbers" placeholder="put numbers">
+            <button class="four columns" @click="load">Load Numbers></button>
+        </div>
+        <div>
+            {{showtable()}}
+        </div>
+        <div>
+            <button class="four columns" @click="add">Add one</button>
+            <button class="four columns" @click="double">Then Double</button> {% endraw%}
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@2.1.10/dist/vue.min.js"></script>
+    <script src="https://unpkg.com/axios@0.16.1/dist/axios.min.js"></script>
+    <script src="https://cdn.rawgit.com/andrewcourtice/vuetiful/master/dist/components/components.bundle.js"></script>
+    <script type="text/javascript">
+        var app = new Vue({
+            el: "#app",
+            data: {
+                start: 0,
+                end: 10,
+                numbers: "",
+                table: {},
+            },
+            methods: {
+                showtable: function() {
+                    axios.get("/api/numbers/" + this.start + "/" + this.end).then(function(response) {
+                        Vue.table = reponse.data
+                    })
+                },
+                add: function() {
+                    axios.post("/api/numbers/", {
+                        "num": Vue.numbers
+                    })
+                },
+                double: function() {},
+            },
+        })
+    </script>
+</body>
+
+</html>
