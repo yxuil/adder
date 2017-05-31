@@ -8,45 +8,96 @@
 
 <body>
     <div id="app" class="container">
-        <div>
-            {% raw %}
-            <input class="four columns" v-model="numbers" placeholder="put numbers">
-            <button class="four columns" @click="load">Load Numbers></button>
+        {% raw %}
+        <div class="row">
+            <input class="eight columns" v-model="numbers" type="text" placeholder="put numbers">
+            <button class="four columns" @click="load">Load Numbers</button>
+            <span>{{ message }}</span>
+        </div>
+
+        <div class="row">
+            <span>start</span> <input type="text" v-model="start" placeholder="0">
+            <span>end</span> <input type="text" v-model="end" placeholder="10">
+        </div>
+        <div class="row">
+            <vuetable ref="vuetable"
+                api-url="/api/numbers/id1/id2"
+                :fields="['ID', 'original', 'plusOne','thenDouble']">
+            </vuetable>
+            {{ datatable }}
         </div>
         <div>
-            {{showtable()}}
+            <button class="six columns" @click="add">Add one</button>
+            <button class="six columns" @click="double">Then Double</button>
         </div>
-        <div>
-            <button class="four columns" @click="add">Add one</button>
-            <button class="four columns" @click="double">Then Double</button> {% endraw%}
-        </div>
+        {% endraw %}
     </div>
 
-    <script src="https://unpkg.com/vue@2.1.10/dist/vue.min.js"></script>
-    <script src="https://unpkg.com/axios@0.16.1/dist/axios.min.js"></script>
-    <script src="https://cdn.rawgit.com/andrewcourtice/vuetiful/master/dist/components/components.bundle.js"></script>
+    <script src="https://unpkg.com/vue@2.2.3/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios@0.16.1/dist/axios.js"></script>
+    <script src="https://unpkg.com/vuetable-2@1.6.0"></script>
     <script type="text/javascript">
         var app = new Vue({
             el: "#app",
             data: {
+                message: "",
                 start: 0,
                 end: 10,
                 numbers: "",
-                table: {},
+                columns: [
+                    { id: "vuetable-column-1", label: "ID" },
+                    { id: "vuetable-column-2", label: "Original" },
+                    { id: "vuetable-column-3", label: "Plus One" },
+                    { id: "vuetable-column-4", label: "Then Double" }
+                ],
+                datatable: "Data goes here",
+
             },
             methods: {
+                load: function() {
+                    var self = this
+                    self.message = "Loading"
+                    axios({
+                        method: 'post',
+                        url:'/api/load',
+                        data: {
+                            "num": self.numbers
+                        }
+                    }).then( function(res){
+                        self.message = "Loaded number: "+ res.data["new added num"]
+                        self.end = res.data["total records"]
+                    })
+                },
                 showtable: function() {
+                    var self = this
                     axios.get("/api/numbers/" + this.start + "/" + this.end).then(function(response) {
-                        Vue.table = reponse.data
+                        self.datatable = response.data
                     })
                 },
                 add: function() {
-                    axios.post("/api/numbers/", {
+                    axios.post("/api/" + id1 + "/add", {
                         "num": Vue.numbers
                     })
                 },
-                double: function() {},
+                double: function() {
+                    axios.post("/api/" + id1 + "/double", {
+                        "num": Vue.numbers
+                    })},
             },
+
+            watch: {
+                start: function() {
+                    this.showtable()
+                },
+                end: function() {
+                    this.showtable()
+                }
+            },
+
+            mounted: function () {
+                this.showtable()
+            }
+
         })
     </script>
 </body>

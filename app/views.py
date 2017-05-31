@@ -17,7 +17,7 @@ class Numbers(pw.Model):
     class Meta:
         database = database
 
-@app.route('/api/numbers', methods = ['POST'])
+@app.route('/api/load', methods = ['POST'])
 def loadNum():
     assert request.method == "POST"
     data = request.get_json()
