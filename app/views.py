@@ -28,21 +28,34 @@ def loadNum():
     return jsonify({"total records": Numbers.select().count(),
                     "new added num": "; ".join(map(str, allnumbers))})
 
-
-@app.route("/api/numbers", methods = ['GET'])
 def allnum():
     table = Numbers.select().group_by(Numbers.id).dicts()
     print(table)
     return jsonify(list(table))
 
-@app.route("/api/numbers/<int:id1>/<int:id2>", methods = ["POST","GET"])
-def numbyrange(id1, id2):
-    start, end = sorted([id1, id2])
-    table = Numbers.select().where(start <= Numbers.id <= end)
+@app.route("/api/numbers", methods = ["POST", "GET"])
+def numbyrange():
+    params = request.get_json()
+    print(request.url, params, type(params))
+    if request.method == "POST":
+        start = int(params["start"]) if params["start"] != "" else 0
+        end = int(params["end"]) if params["end"] != "" else 0
+        if start > end:
+            start = end
+    elif request.method == "GET":
+        print("GET")
+    
+    if end==0 and start==0:
+        table = Numbers.select().group_by(Numbers.id)
+    else:
+        table = Numbers.select().group_by(Numbers.id).where( (start <= Numbers.id) & (Numbers.id  <= end))
+    
     return jsonify(list(table.dicts()))
 
 @app.route("/api/numbers/<int:id1>/add", methods=['POST'])
-def add(id1):
+def add():
+    params = request.get_json()
+    id1 = int(params["select"]) if params["select"] == "" else 0
     records = Numbers.select().where(Numbers.id == id1)
     for record in records:
         record.plusone = record.initialy + 1
@@ -50,7 +63,9 @@ def add(id1):
     return jsonify(list(records.dicts()))
 
 @app.route("/api/numbers/<int:id1>/double", methods=['POST'])
-def double(id1):
+def double():
+    params = request.get_json()
+    id1 = int(params["select"]) if params["select"] == "" else 0
     records = Numbers.select().where(Numbers.id == id1)
     for record in records:
         record.timestwo = record.plusone * 2

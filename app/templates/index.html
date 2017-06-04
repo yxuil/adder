@@ -16,14 +16,14 @@
         </div>
 
         <div class="row">
-            <span>start</span> <input type="text" v-model="start" placeholder="0">
-            <span>end</span> <input type="text" v-model="end" placeholder="10">
+            <span class="two columns">start</span> <input type="text" class="four columns" v-model="start" placeholder="0">
+            <span class="two columns">end</span> <input type="text" class="four columns" v-model="end" placeholder="10">
         </div>
         <div class="row">
-            <vuetable ref="vuetable"
-                api-url="/api/numbers/id1/id2"
-                :fields="['ID', 'original', 'plusOne','thenDouble']">
-            </vuetable>
+            <vuetable class="two-thirds columns" ref="vuetable" track-by="id" :data="datatable"
+                      :api-mode="false" :fields="columns"></vuetable>
+            <!--vuetable class="two-thirds columns" ref="vuetable" api-url="/api/numbers" data-path=""
+                      :http-options='{method: "post",  data: { "start":1,  "end":9 } }' :fields="columns"></vuetable-->
             {{ datatable }}
         </div>
         <div>
@@ -35,71 +35,8 @@
 
     <script src="https://unpkg.com/vue@2.2.3/dist/vue.js"></script>
     <script src="https://unpkg.com/axios@0.16.1/dist/axios.js"></script>
-    <script src="https://unpkg.com/vuetable-2@1.6.0"></script>
-    <script type="text/javascript">
-        var app = new Vue({
-            el: "#app",
-            data: {
-                message: "",
-                start: 0,
-                end: 10,
-                numbers: "",
-                columns: [
-                    { id: "vuetable-column-1", label: "ID" },
-                    { id: "vuetable-column-2", label: "Original" },
-                    { id: "vuetable-column-3", label: "Plus One" },
-                    { id: "vuetable-column-4", label: "Then Double" }
-                ],
-                datatable: "Data goes here",
-
-            },
-            methods: {
-                load: function() {
-                    var self = this
-                    self.message = "Loading"
-                    axios({
-                        method: 'post',
-                        url:'/api/load',
-                        data: {
-                            "num": self.numbers
-                        }
-                    }).then( function(res){
-                        self.message = "Loaded number: "+ res.data["new added num"]
-                        self.end = res.data["total records"]
-                    })
-                },
-                showtable: function() {
-                    var self = this
-                    axios.get("/api/numbers/" + this.start + "/" + this.end).then(function(response) {
-                        self.datatable = response.data
-                    })
-                },
-                add: function() {
-                    axios.post("/api/" + id1 + "/add", {
-                        "num": Vue.numbers
-                    })
-                },
-                double: function() {
-                    axios.post("/api/" + id1 + "/double", {
-                        "num": Vue.numbers
-                    })},
-            },
-
-            watch: {
-                start: function() {
-                    this.showtable()
-                },
-                end: function() {
-                    this.showtable()
-                }
-            },
-
-            mounted: function () {
-                this.showtable()
-            }
-
-        })
-    </script>
+    <script src='{{ url_for("static", filename="vuetable-2.js") }}'></script>
+    <script src='{{ url_for("static", filename= "main.js") }}'></script>
 </body>
 
 </html>
