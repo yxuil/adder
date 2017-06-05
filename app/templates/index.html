@@ -20,11 +20,28 @@
             <span class="two columns">end</span> <input type="text" class="four columns" v-model="end" placeholder="10">
         </div>
         <div class="row">
-            <vuetable class="two-thirds columns" ref="vuetable" track-by="id" :data="datatable"
-                      :api-mode="false" :fields="columns"></vuetable>
-            <!--vuetable class="two-thirds columns" ref="vuetable" api-url="/api/numbers" data-path=""
-                      :http-options='{method: "post",  data: { "start":1,  "end":9 } }' :fields="columns"></vuetable-->
-            {{ datatable }}
+            <table class="two-thirds columns">
+                <thead>
+                    <tr>
+                        <th class="one columns">idx</th>
+                    <th class="one columns">ID</th>
+                    <th class="three columns">original</th>
+                    <th class="three columns">Plus One</th>
+                    <th class="four columns">Then Double</th>
+                    </tr>
+                </thead>
+                <tbody v-for="row in datatable">
+                  <tr>  
+                      <td class="one columns"><input type="checkbox" :value="row.id" v-model="row.selected"></td>
+                    <td class="one columns">{{row.id}}</td>
+                    <td class="three columns">{{row.initialy}}</td>
+                    <td class="three columns">{{row.plusone}}</td>
+                    <td class="four columns">{{row.timestwo}}</td>
+                  </tr>
+                </tbody>
+                
+            </table>
+            {{ selected }}
         </div>
         <div>
             <button class="six columns" @click="add">Add one</button>
@@ -35,7 +52,6 @@
 
     <script src="https://unpkg.com/vue@2.2.3/dist/vue.js"></script>
     <script src="https://unpkg.com/axios@0.16.1/dist/axios.js"></script>
-    <script src='{{ url_for("static", filename="vuetable-2.js") }}'></script>
     <script src='{{ url_for("static", filename= "main.js") }}'></script>
 </body>
 

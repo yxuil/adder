@@ -49,7 +49,7 @@ def numbyrange():
         table = Numbers.select().group_by(Numbers.id)
     else:
         table = Numbers.select().group_by(Numbers.id).where( (start <= Numbers.id) & (Numbers.id  <= end))
-    
+    print(list(table.dicts()))
     return jsonify(list(table.dicts()))
 
 @app.route("/api/numbers/<int:id1>/add", methods=['POST'])

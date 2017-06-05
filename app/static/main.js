@@ -2,16 +2,13 @@
  * Created by liu on 6/1/17.
  */
 
-Vue.use(Vuetable);
-
 var app = new Vue({
     el: "#app",
 
     data: {
         message: "",
         start: 0,
-        end: 10,
-        queryparams: {},
+        end: 1,
         numbers: "",
         columns: [
             "__checkbox",
@@ -28,15 +25,17 @@ var app = new Vue({
                 name: "timestwo",
                 title: "Then Double"
             }],
-        datatable: [
-            {"id": 1, "initialy": 25, "plusone": 26, "timestwo": 52},
-            {"id": 2, "initialy": 25, "plusone": null, "timestwo": null},
-            {"id": 3, "initialy": 34, "plusone": null, "timestwo": null},
-            {"id": 4, "initialy": 35, "plusone": null, "timestwo": null},
-            {"id": 5, "initialy": 38, "plusone": null, "timestwo": null},]
+        datatable: []
     },
 
     computed: {
+        selected() {
+            return this.datatable.filter(function (obj) {
+                return obj.selected
+            }).map(function (obj) {
+                return obj.id
+            })
+        }
     },
 
     methods: {
@@ -64,7 +63,8 @@ var app = new Vue({
                     "end":self.end
                 }
             }).then(function(response) {
-                self.datatable = response.data
+                self.datatable =  response.data
+                self.datatable.forEach(function(obj) { obj.selected = false })
             })
         },
         add: function() {
@@ -81,21 +81,15 @@ var app = new Vue({
     watch: {
         start: function() {
             this.showtable()
-            this.$refs.vuetable.refresh()
         },
         end: function() {
             this.showtable()
-            this.$refs.vuetable.refresh()
         }
     },
 
-    ready: function () {
-        this.showtable()
-        this.queryparams={
-                "start":self.start,
-                "end":self.end
-            }
-        alert(this.datatable)
+    mounted: function () {
+        this.start=1
+        this.end = 5
     }
 
 })
