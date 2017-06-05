@@ -52,26 +52,29 @@ def numbyrange():
     print(list(table.dicts()))
     return jsonify(list(table.dicts()))
 
-@app.route("/api/numbers/<int:id1>/add", methods=['POST'])
+@app.route("/api/add", methods=['POST'])
 def add():
     params = request.get_json()
-    id1 = int(params["select"]) if params["select"] == "" else 0
-    records = Numbers.select().where(Numbers.id == id1)
+    print(params)
+    ids = params["select"]
+    records = Numbers.select().where(Numbers.id << ids)
     for record in records:
         record.plusone = record.initialy + 1
         record.save()
     return jsonify(list(records.dicts()))
 
-@app.route("/api/numbers/<int:id1>/double", methods=['POST'])
+@app.route("/api/double", methods=['POST'])
 def double():
     params = request.get_json()
-    id1 = int(params["select"]) if params["select"] == "" else 0
-    records = Numbers.select().where(Numbers.id == id1)
+    print(params)
+    ids = params["select"]
+    records = Numbers.select().where(Numbers.id << ids)
     for record in records:
         record.timestwo = record.plusone * 2
         record.save()
     return jsonify(list(records.dicts()))
-    
+
+
 @app.route("/")
 @app.route("/index")
 def frontend():

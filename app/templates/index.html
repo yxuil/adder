@@ -41,8 +41,8 @@
                 </tbody>
                 
             </table>
-            {{ selected }}
         </div>
+            <div>Selected: {{ selected.join() }}</div>
         <div>
             <button class="six columns" @click="add">Add one</button>
             <button class="six columns" @click="double">Then Double</button>

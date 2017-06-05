@@ -29,7 +29,7 @@ var app = new Vue({
     },
 
     computed: {
-        selected() {
+        selected: function() {
             return this.datatable.filter(function (obj) {
                 return obj.selected
             }).map(function (obj) {
@@ -68,14 +68,20 @@ var app = new Vue({
             })
         },
         add: function() {
-            axios.post("/api/" + id1 + "/add", {
-                "num": Vue.numbers
-            })
+            sel = this.datatable.filter(function(o){return o.selected}).map(function(o){return o.id});
+            axios.post("/api/add",
+                {
+                    "select": sel
+                })
+            this.showtable()
         },
         double: function() {
-            axios.post("/api/" + id1 + "/double", {
-                "num": Vue.numbers
-            })},
+            sel = this.datatable.filter(function(o){return o.selected}).map(function(o){return o.id});
+            axios.post("/api/double", {
+                "select": sel
+            })
+            this.showtable()
+        },
     },
 
     watch: {
